@@ -32,8 +32,8 @@ def login_form():
                 user = get_user(username)
                 if user and verify_password(user, password):
                     st.session_state.logged_in = True
-                    st.session_state.user_id = user.id
-                    st.session_state.username = user.username
+                    st.session_state.user_id = user['id']
+                    st.session_state.username = user['username']
                     st.rerun()
                 else:
                     st.error('Usuário ou senha incorretos')
