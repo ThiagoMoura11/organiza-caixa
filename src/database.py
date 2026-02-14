@@ -1,169 +1,116 @@
+from supabase import create_client, Client
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 import bcrypt
+import os
+from dotenv import load_dotenv
 
-Base = declarative_base()
+load_dotenv()
 
+SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://cjvpldbsaxsrtmdvqeyv.supabase.co')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqdnBsZGJzYXhzcnRtZHZxZXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTUxMTEsImV4cCI6MjA4NjY3MTExMX0.qf-JHw4qYrwqYT58UqyIlKXhIvOOAdgqYR8RVty5gYQ')
 
-class User(Base):
-    __tablename__ = 'users'
-    
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    lancamentos = relationship('Lancamento', back_populates='user', cascade='all, delete-orphan')
-    orcamentos = relationship('Orcamento', back_populates='user', cascade='all, delete-orphan')
-
-
-class Lancamento(Base):
-    __tablename__ = 'lancamentos'
-    
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    data = Column(DateTime, nullable=False)
-    tipo = Column(String(20), nullable=False)
-    categoria = Column(String(100), nullable=False)
-    cliente_fornecedor = Column(String(200))
-    descricao = Column(String(500))
-    conta = Column(String(50), nullable=False)
-    valor = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    user = relationship('User', back_populates='lancamentos')
-
-
-class Orcamento(Base):
-    __tablename__ = 'orcamentos'
-    
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    categoria = Column(String(100), nullable=False)
-    limite = Column(Float, nullable=False)
-    mes = Column(String(7), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    user = relationship('User', back_populates='orcamentos')
-
-
-engine = create_engine('sqlite:///organiza_caixa.db', echo=False)
-Session = sessionmaker(bind=engine)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 def init_db():
-    Base.metadata.create_all(engine)
+    pass
 
 
-def create_user(username: str, password: str) -> User:
-    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    session = Session()
-    user = User(username=username, password_hash=password_hash.decode('utf-8'))
-    session.add(user)
-    session.commit()
-    session.close()
-    return user
+def create_user(username: str, password: str):
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    
+    result = supabase.table('users').insert({
+        'username': username,
+        'password_hash': password_hash,
+        'created_at': datetime.utcnow().isoformat()
+    }).execute()
+    
+    return result.data[0] if result.data else None
 
 
-def get_user(username: str) -> User | None:
-    session = Session()
-    user = session.query(User).filter(User.username == username).first()
-    session.close()
-    return user
+def get_user(username: str):
+    result = supabase.table('users').select('*').eq('username', username).execute()
+    return result.data[0] if result.data else None
 
 
-def get_user_by_id(user_id: int) -> User | None:
-    session = Session()
-    user = session.query(User).filter(User.id == user_id).first()
-    session.close()
-    return user
+def get_user_by_id(user_id: int):
+    result = supabase.table('users').select('*').eq('id', user_id).execute()
+    return result.data[0] if result.data else None
 
 
-def verify_password(user: User, password: str) -> bool:
-    return bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8'))
+def verify_password(user, password: str) -> bool:
+    return bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8'))
+
+
+def delete_user(user_id: int):
+    supabase.table('orcamentos').delete().eq('user_id', user_id).execute()
+    supabase.table('lancamentos').delete().eq('user_id', user_id).execute()
+    supabase.table('users').delete().eq('id', user_id).execute()
 
 
 def save_lancamento(
     user_id: int,
-    data: datetime,
+    data,
     tipo: str,
     categoria: str,
-    cliente_fornecedor: str | None,
-    descricao: str | None,
+    cliente_fornecedor: str,
+    descricao: str,
     conta: str,
     valor: float
-) -> Lancamento:
-    session = Session()
-    lancamento = Lancamento(
-        user_id=user_id,
-        data=data,
-        tipo=tipo,
-        categoria=categoria,
-        cliente_fornecedor=cliente_fornecedor or '',
-        descricao=descricao or '',
-        conta=conta,
-        valor=valor
-    )
-    session.add(lancamento)
-    session.commit()
-    session.close()
-    return lancamento
+):
+    data_str = data.isoformat() if isinstance(data, datetime) else data
+    
+    result = supabase.table('lancamentos').insert({
+        'user_id': user_id,
+        'data': data_str,
+        'tipo': tipo,
+        'categoria': categoria,
+        'cliente_fornecedor': cliente_fornecedor or '',
+        'descricao': descricao or '',
+        'conta': conta,
+        'valor': valor,
+        'created_at': datetime.utcnow().isoformat()
+    }).execute()
+    
+    return result.data[0] if result.data else None
 
 
-def get_lancamentos(user_id: int, conta: str | None = None) -> list[Lancamento]:
-    session = Session()
-    query = session.query(Lancamento).filter(Lancamento.user_id == user_id)
+def get_lancamentos(user_id: int, conta: str = None):
+    query = supabase.table('lancamentos').select('*').eq('user_id', user_id)
+    
     if conta and conta != 'Todas':
-        query = query.filter(Lancamento.conta == conta)
-    lancamentos = query.order_by(Lancamento.data.desc()).all()
-    session.close()
-    return lancamentos
+        query = query.eq('conta', conta)
+    
+    result = query.order('data', desc=True).execute()
+    return result.data
 
 
 def delete_lancamento(lancamento_id: int, user_id: int):
-    session = Session()
-    session.query(Lancamento).filter(
-        Lancamento.id == lancamento_id,
-        Lancamento.user_id == user_id
-    ).delete()
-    session.commit()
-    session.close()
+    supabase.table('lancamentos').delete().eq('id', lancamento_id).eq('user_id', user_id).execute()
 
 
-def delete_all_lancamentos(user_id: int, conta: str | None = None):
-    session = Session()
-    query = session.query(Lancamento).filter(Lancamento.user_id == user_id)
+def delete_all_lancamentos(user_id: int, conta: str = None):
+    query = supabase.table('lancamentos').delete().eq('user_id', user_id)
     if conta and conta != 'Todas':
-        query = query.filter(Lancamento.conta == conta)
-    query.delete()
-    session.commit()
-    session.close()
+        query = query.eq('conta', conta)
+    query.execute()
 
 
 def save_orcamento(user_id: int, categoria: str, limite: float, mes: str):
-    session = Session()
-    existing = session.query(Orcamento).filter(
-        Orcamento.user_id == user_id,
-        Orcamento.categoria == categoria,
-        Orcamento.mes == mes
-    ).first()
+    existing = supabase.table('orcamentos').select('*').eq('user_id', user_id).eq('categoria', categoria).eq('mes', mes).execute()
     
-    if existing:
-        existing.limite = limite
+    if existing.data:
+        supabase.table('orcamentos').update({'limite': limite}).eq('id', existing.data[0]['id']).execute()
     else:
-        orcamento = Orcamento(user_id=user_id, categoria=categoria, limite=limite, mes=mes)
-        session.add(orcamento)
-    
-    session.commit()
-    session.close()
+        supabase.table('orcamentos').insert({
+            'user_id': user_id,
+            'categoria': categoria,
+            'limite': limite,
+            'mes': mes,
+            'created_at': datetime.utcnow().isoformat()
+        }).execute()
 
 
-def get_orcamentos(user_id: int, mes: str) -> list[Orcamento]:
-    session = Session()
-    orcamentos = session.query(Orcamento).filter(
-        Orcamento.user_id == user_id,
-        Orcamento.mes == mes
-    ).all()
-    session.close()
-    return orcamentos
+def get_orcamentos(user_id: int, mes: str):
+    result = supabase.table('orcamentos').select('*').eq('user_id', user_id).eq('mes', mes).execute()
+    return result.data
