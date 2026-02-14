@@ -1,5 +1,6 @@
 from supabase import create_client, Client
 from datetime import datetime
+from typing import Optional
 import bcrypt
 import os
 from dotenv import load_dotenv
@@ -76,24 +77,37 @@ def save_lancamento(
 
 
 def get_lancamentos(user_id: int, conta: str = None):
-    query = supabase.table('lancamentos').select('*').eq('user_id', user_id)
+    if not user_id:
+        return []
     
-    if conta and conta != 'Todas':
-        query = query.eq('conta', conta)
-    
-    result = query.order('data', desc=True).execute()
-    return result.data
+    try:
+        query = supabase.table('lancamentos').select('*').eq('user_id', user_id)
+        
+        if conta and conta != 'Todas':
+            query = query.eq('conta', conta)
+        
+        result = query.order('data', desc=True).execute()
+        return result.data if result.data else []
+    except Exception as e:
+        print(f"Error fetching lancamentos: {e}")
+        return []
 
 
 def delete_lancamento(lancamento_id: int, user_id: int):
-    supabase.table('lancamentos').delete().eq('id', lancamento_id).eq('user_id', user_id).execute()
+    try:
+        supabase.table('lancamentos').delete().eq('id', lancamento_id).eq('user_id', user_id).execute()
+    except Exception as e:
+        print(f"Error deleting lancamento: {e}")
 
 
-def delete_all_lancamentos(user_id: int, conta: str = None):
-    query = supabase.table('lancamentos').delete().eq('user_id', user_id)
-    if conta and conta != 'Todas':
-        query = query.eq('conta', conta)
-    query.execute()
+def delete_all_lancamentos(user_id: int, conta: Optional[str] = None):
+    try:
+        query = supabase.table('lancamentos').delete().eq('user_id', user_id)
+        if conta and conta != 'Todas':
+            query = query.eq('conta', conta)
+        query.execute()
+    except Exception as e:
+        print(f"Error deleting all lancamentos: {e}")
 
 
 def save_orcamento(user_id: int, categoria: str, limite: float, mes: str):
