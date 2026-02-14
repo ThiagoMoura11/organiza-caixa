@@ -85,7 +85,8 @@ def get_lancamentos(user_id: int, conta: str = None):
         return []
     
     try:
-        query = supabase.table('lancamentos').select('*').eq('user_id', user_id)
+        user_id_int = int(user_id)
+        query = supabase.table('lancamentos').select('*').eq('user_id', user_id_int)
         
         if conta and conta != 'Todas':
             query = query.eq('conta', conta)
