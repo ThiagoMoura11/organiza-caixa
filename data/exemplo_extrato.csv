@@ -1,0 +1,23 @@
+Data;Tipo;Categoria;Cliente/Fornecedor;Descrição;Conta;Valor
+2024-01-05;Entrada;Salario;Empresa XYZ;Salario Janeiro;Itau;15000.00
+2024-01-10;Saída;Aluguel;Imobiliária XYZ;Aluguel Janeiro;Itau;-2500.00
+2024-01-12;Saída;Supermercado;Carrefour;Compras semana;Itau;-450.00
+2024-01-15;Saída;Cartão de Crédito;Itau;Fatura cartão;Itau;-1200.00
+2024-01-18;Entrada;Reembolso;Seguradora XYZ;Reembolso seguro;Itau;350.00
+2024-01-20;Saída;Abastecimento;Shell;Combustível;Itau;-250.00
+2024-01-22;Saída;Financiamento;Itau;Parcela financiamento;Itau;-1800.00
+2024-01-25;Entrada;Operação LOG;Cliente ABC;Frete janeiro;Itau;5000.00
+2024-01-28;Saída;Imposto;Receita Federal;IRPF;Itau;-1500.00
+2024-02-01;Entrada;Salario;Empresa XYZ;Salario Fevereiro;Itau;15000.00
+2024-02-05;Saída;Aluguel;Imobiliária XYZ;Aluguel Fevereiro;Itau;-2500.00
+2024-02-10;Saída;Manutenção; Oficina;Troca óleo;Itau;-180.00
+2024-02-15;Entrada;Operação amonex;Cliente DEF;Serviço fevereiro;Itau;3500.00
+2024-02-18;Saída;Contabilidade;Escritório ABC;Serviços contábeis;Itau;-800.00
+2024-02-20;Saída;Tarifa Bancaria;Itau;Tarifa mensal;-15.00
+2024-02-25;Entrada;Velada - Brasil Web;Cliente GHI;Projeto fevereiro;Inter;4200.00
+2024-03-01;Entrada;Salario;Empresa XYZ;Salario Março;Itau;15000.00
+2024-03-05;Saída;Aluguel;Imobiliária XYZ;Aluguel Março;Itau;-2500.00
+2024-03-10;Saída;Seguro;Seguradora ABC;Seguro veículo;Itau;-450.00
+2024-03-15;Entrada;Reembolso;Empresa XYZ;Reembolso viagem;Itau;280.00
+2024-03-20;Saída;Abastecimento;Petrobras;Combustível;Itau;-300.00
+2024-03-25;Entrada;Salario;Empresa XYZ;Salario Abril;Itau;15000.00

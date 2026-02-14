@@ -1,0 +1,48 @@
+Data;Tipo;Categoria;Cliente/Fornecedor;Descrição;Conta;Valor
+2024-01-02;Entrada;Salario;Empresa;Salario Janeiro;Itau;15000.00
+2024-01-05;Saída;Aluguel;Imobiliária;Aluguel Janeiro;Itau;-2800.00
+2024-01-08;Saída;Cartão de Crédito;Itau;Fatura cartão janeiro;Itau;-1547.89
+2024-01-10;Entrada;Reembolso;Allianz;Reembolso vidro;Itau;450.00
+2024-01-12;Saída;Abastecimento;Shell;Gasolina;Itau;-320.50
+2024-01-15;Saída;Financiamento;Itau;Parcela financiamento;Itau;-2150.00
+2024-01-18;Entrada;Operação LOG;Transportadora;Frete janeiro;Itau;8500.00
+2024-01-20;Saída;Imposto;Receita Federal;IRPJ;Itau;-1250.00
+2024-01-22;Saída;Manutenção;Auto Mecânica;Troca óleo e filtros;Itau;-380.00
+2024-01-25;Saída;Contabilidade;Escritorio Contábil;Serviços contábeis;Itau;-650.00
+2024-01-26;Saída;Tarifa Bancaria;Itau;Tarifa conta;Itau;-45.90
+2024-01-28;Entrada;Velada - Brasil Web;Brasil Web;Projeto site;Inter;3200.00
+2024-01-30;Saída;Rastreador;Sascar;Serviço rastreador;Itau;-120.00
+2024-02-01;Entrada;Salario;Empresa;Salario Fevereiro;Itau;15000.00
+2024-02-03;Entrada;Operação amonex;Amonex;Serviço fevereiro;Itau;5600.00
+2024-02-05;Saída;Aluguel;Imobiliária;Aluguel Fevereiro;Itau;-2800.00
+2024-02-10;Saída;Cartão de Crédito;Itau;Fatura cartão fevereiro;Itau;-2180.45
+2024-02-12;Saída;Abastecimento;Petrobras;Gasolina;Itau;-280.00
+2024-02-15;Entrada;Reembolso;Seguradora;Reembolso manutenção;Itau;320.00
+2024-02-18;Saída;Financiamento;Itau;Parcela financiamento;Itau;-2150.00
+2024-02-20;Entrada;Operação LOG;Transportadora;Frete fevereiro;Itau;7200.00
+2024-02-22;Saída;Imposto;Receita Federal;ICMS;Itau;-890.00
+2024-02-25;Saída;Manutenção; borracharia;Pneus;Itau;-950.00
+2024-02-28;Entrada;Velada - Brasil Web;Brasil Web;Manutenção site;Inter;1800.00
+2024-03-01;Entrada;Salario;Empresa;Salario Março;Itau;15000.00
+2024-03-05;Saída;Aluguel;Imobiliária;Aluguel Março;Itau;-2800.00
+2024-03-08;Entrada;Operação amonex;Amonex;Serviço março;Itau;4800.00
+2024-03-10;Saída;Cartão de Crédito;Itau;Fatura cartão março;Itau;-1920.30
+2024-03-12;Saída;Abastecimento;Shell;Gasolina;Itau;-310.00
+2024-03-15;Saída;Seguro;Allianz;Seguro veículo;Itau;-580.00
+2024-03-18;Saída;Financiamento;Itau;Parcela financiamento;Itau;-2150.00
+2024-03-20;Entrada;Operação LOG;Transportadora;Frete março;Itau;9100.00
+2024-03-22;Saída;Contabilidade;Escritorio Contábil;Serviços contábeis;Itau;-650.00
+2024-03-25;Saída;Imposto;Receita Federal;ISS;Itau;-420.00
+2024-03-28;Entrada;Velada - Brasil Web;Brasil Web;Novo projeto;Inter;5500.00
+2024-03-30;Saída;Tarifa Bancaria;Itau;Tarifa conta;Itau;-45.90
+2024-04-01;Entrada;Salario;Empresa;Salario Abril;Itau;15000.00
+2024-04-05;Saída;Aluguel;Imobiliária;Aluguel Abril;Itau;-2800.00
+2024-04-08;Entrada;Reembolso;Allianz;Reembolso parachute;Itau;680.00
+2024-04-10;Saída;Cartão de Crédito;Itau;Fatura cartão abril;Itau;-2350.80
+2024-04-12;Saída;Abastecimento;Petrobras;Gasolina;Itau;-295.00
+2024-04-15;Saída;Financiamento;Itau;Parcela financiamento;Itau;-2150.00
+2024-04-18;Entrada;Operação LOG;Transportadora;Frete abril;Itau;6800.00
+2024-04-20;Saída;Manutenção;Auto Elétrica;Bateria;Itau;-450.00
+2024-04-22;Saída;Imposto;Receita Federal;IRPJ;Itau;-1580.00
+2024-04-25;Entrada;Operação amonex;Amonex;Serviço abril;Itau;5200.00
+2024-04-28;Entrada;Velada - Brasil Web;Brasil Web;Atualização;Inter;2400.00
