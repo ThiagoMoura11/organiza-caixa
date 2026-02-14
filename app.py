@@ -73,14 +73,14 @@ st.sidebar.header('Filtros')
 
 if lancamentos:
     df = pd.DataFrame([{
-        'id': l.id,
-        'Data': l.data,
-        'Tipo': l.tipo,
-        'Categoria': l.categoria,
-        'Cliente/Fornecedor': l.cliente_fornecedor,
-        'Descrição': l.descricao,
-        'Conta': l.conta,
-        'Valor': l.valor
+        'id': l['id'],
+        'Data': l['data'],
+        'Tipo': l['tipo'],
+        'Categoria': l['categoria'],
+        'Cliente/Fornecedor': l['cliente_fornecedor'],
+        'Descrição': l['descricao'],
+        'Conta': l['conta'],
+        'Valor': l['valor']
     } for l in lancamentos])
     
     min_date = df['Data'].min().date()
