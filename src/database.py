@@ -59,21 +59,25 @@ def save_lancamento(
     conta: str,
     valor: float
 ):
-    data_str = data.isoformat() if isinstance(data, datetime) else data
-    
-    result = supabase.table('lancamentos').insert({
-        'user_id': user_id,
-        'data': data_str,
-        'tipo': tipo,
-        'categoria': categoria,
-        'cliente_fornecedor': cliente_fornecedor or '',
-        'descricao': descricao or '',
-        'conta': conta,
-        'valor': valor,
-        'created_at': datetime.utcnow().isoformat()
-    }).execute()
-    
-    return result.data[0] if result.data else None
+    try:
+        data_str = data.isoformat() if isinstance(data, datetime) else data
+        
+        result = supabase.table('lancamentos').insert({
+            'user_id': user_id,
+            'data': data_str,
+            'tipo': tipo,
+            'categoria': categoria,
+            'cliente_fornecedor': cliente_fornecedor or '',
+            'descricao': descricao or '',
+            'conta': conta,
+            'valor': valor,
+            'created_at': datetime.utcnow().isoformat()
+        }).execute()
+        
+        return result.data[0] if result.data else None
+    except Exception as e:
+        print(f"Error saving lancamento: {e}")
+        raise
 
 
 def get_lancamentos(user_id: int, conta: str = None):
