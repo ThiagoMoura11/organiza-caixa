@@ -55,15 +55,16 @@ if extrato_file:
                 save_lancamento(
                     st.session_state.user_id,
                     row[COLUNAS.DATA],
-                    row[COLUNAS.TIPO],
-                    row[COLUNAS.CATEGORIA],
-                    row.get(COLUNAS.CLIENTE_FORNECEDOR, ''),
-                    row.get(COLUNAS.DESCRICAO, ''),
-                    row[COLUNAS.CONTA],
-                    row[COLUNAS.VALOR]
+                    str(row[COLUNAS.TIPO]),
+                    str(row[COLUNAS.CATEGORIA]),
+                    str(row.get(COLUNAS.CLIENTE_FORNECEDOR, '')),
+                    str(row.get(COLUNAS.DESCRICAO, '')),
+                    str(row[COLUNAS.CONTA]),
+                    float(row[COLUNAS.VALOR])
                 )
             
             st.success('Extrato importado com sucesso!')
+            st.rerun()
     except Exception as e:
         st.error(f'Erro ao processar extrato: {str(e)}')
 
