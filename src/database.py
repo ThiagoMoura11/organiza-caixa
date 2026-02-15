@@ -1,16 +1,22 @@
 from supabase import create_client, Client
 from datetime import datetime
 from typing import Optional
+import streamlit as st
 import bcrypt
 import os
 from dotenv import load_dotenv
+from functools import lru_cache
 
 load_dotenv()
 
-SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://cjvpldbsaxsrtmdvqeyv.supabase.co')
-SUPABASE_KEY = os.getenv('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqdnBsZGJzYXhzcnRtZHZxZXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwOTUxMTEsImV4cCI6MjA4NjY3MTExMX0.qf-JHw4qYrwqYT58UqyIlKXhIvOOAdgqYR8RVty5gYQ')
+SUPABASE_URL = os.getenv('SUPABASE_URL', '')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY', '')
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+if not SUPABASE_URL or not SUPABASE_KEY:
+    SUPABASE_URL = st.secrets.get('SUPABASE_URL', '') if hasattr(st, 'secrets') else ''
+    SUPABASE_KEY = st.secrets.get('SUPABASE_KEY', '') if hasattr(st, 'secrets') else ''
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
 
 def init_db():
@@ -59,6 +65,9 @@ def save_lancamento(
     conta: str,
     valor: float
 ):
+    if not supabase:
+        raise Exception("Supabase not configured")
+    
     try:
         data_str = data.isoformat() if isinstance(data, datetime) else data
         
@@ -81,7 +90,7 @@ def save_lancamento(
 
 
 def get_lancamentos(user_id: int, conta: str = None):
-    if not user_id:
+    if not supabase or not user_id:
         return []
     
     try:
@@ -92,10 +101,12 @@ def get_lancamentos(user_id: int, conta: str = None):
             query = query.eq('conta', conta)
         
         result = query.order('data', desc=True).execute()
-        return result.data if result.data else []
+        
+        st.session_state['lancamentos_cache'] = result.data if result.data else []
+        return st.session_state.get('lancamentos_cache', [])
     except Exception as e:
         print(f"Error fetching lancamentos: {e}")
-        return []
+        return st.session_state.get('lancamentos_cache', [])
 
 
 def delete_lancamento(lancamento_id: int, user_id: int):
