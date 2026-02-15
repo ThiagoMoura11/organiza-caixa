@@ -83,6 +83,17 @@ if lancamentos:
         'Valor': l['valor']
     } for l in lancamentos])
     
+    if df.empty:
+        st.warning('Nenhum lançamento encontrado.')
+        st.stop()
+    
+    df['Data'] = pd.to_datetime(df['Data'], errors='coerce')
+    df = df.dropna(subset=['Data'])
+    
+    if df.empty:
+        st.warning('Nenhum lançamento com data válida.')
+        st.stop()
+    
     min_date = df['Data'].min().date()
     max_date = df['Data'].max().date()
     
